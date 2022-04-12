@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- DB 연결 정보 담긴 properties 파일 읽어오기 -->
+	<context:property-placeholder location="connection-info.properties"/>
+	
+	<!-- bean scan 할 basePackage 설정 -->
+	<context:component-scan base-package="com.greedy.section02.mapperscan"/>
+	
+	<!-- sqlSessionTemplate 등록 -->
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSession"/>
+	</bean>
+	
+	<!-- sqlSessionFactoryBean 등록 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="com/greedy/section02/mapperscan/config/mybatis-config.xml"/>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<!-- basicDataSource 등록 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${oracle.dev.driver}"/>
+		<property name="url" value="${oracle.dev.url}"/>
+		<property name="username" value="${oracle.dev.username}"/>
+		<property name="password" value="${oracle.dev.password}"/>
+		<property name="defaultAutoCommit" value="false"/>
+	</bean>
+	
+	<!-- 
+		마이바티스 스프링 매퍼 스캔 기능
+		https://mybatis.org/spring/ko/mappers.html 참조
+		베이스 패키지 하위에 있는 매퍼를 탐색하여 proxy로 Impl을 구현한다
+	-->
+	<mybatis-spring:scan base-package="com.greedy.section02.mapperscan.model.dao"/>
+	
+</beans>
