@@ -17,7 +17,7 @@ public class Application {
 		 * */
 		ApplicationContext context = new GenericXmlApplicationContext("com/greedy/section02/mapperscan/config/spring-context.xml");
 		
-		System.out.println("전체 메뉴 조회하기");
+		System.out.println("전체 메뉴 조회");
 		
 		MenuService menuService = context.getBean("menuService", MenuService.class);
 		
